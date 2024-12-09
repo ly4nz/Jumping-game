@@ -1,5 +1,5 @@
 from player_settings import player, player_x, player_y
-from obstacles import obstacle_colors, obstacles, reset_obstacles
+from obstacles_spawning import obstacle_colors, obstacles, reset_obstacles
 from screen import SCREEN_WIDTH
 import pygame
 import random

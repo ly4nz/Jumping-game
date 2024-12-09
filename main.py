@@ -1,10 +1,9 @@
 import pygame
 import math
-from obstacles import spawn_obstacle, update_obstacles
 from screen import SCREEN_WIDTH, screen
-from player_settings import jumping, player_y, player_x, player
+from player_settings import jumping, player_y, player
 from other import run, in_game_over_screen
-from game_over import check_for_game_over, game_over_screen
+from game_over import game_over_screen
 from fonts import font1
 
 pygame.init()
@@ -60,12 +59,14 @@ while run and not in_game_over_screen:
 
     # Obstacle spawning
     if spawn_timer >= 120:
+        from game_data import spawn_obstacle
         spawn_obstacle()
         spawn_timer = 0
-
-    update_obstacles()
+    from game_data import update_obstacles
+    update_obstacles(screen)
 
     # Check for game over and display check for game over
+    from obstacles_spawning import check_for_game_over
     if check_for_game_over():
         game_over_screen(screen, font1)
         run = False
