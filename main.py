@@ -3,13 +3,18 @@ import math
 from screen import SCREEN_WIDTH, screen
 from player_settings import jumping, player_y, player
 from other import run, in_game_over_screen
-from game_over import game_over_screen
-from fonts import font1
+from buttons import Button
+from obstacles_spawning import obstacles
+from game_data import spawn_obstacle, update_obstacles
 
 pygame.init()
 
-clock = pygame.time.Clock()
+# Game settings
 FPS = 60
+clock = pygame.time.Clock()
+
+game_over = False
+on_ground = True  # Initialize on_ground flag to True
 
 # Jumping parameters
 gravity = 1
@@ -27,9 +32,12 @@ background_width = background.get_width()
 scroll = 0
 tiles = math.ceil(SCREEN_WIDTH / background_width) + 1
 
+# Button setup
+exit_button_img = pygame.image.load("exit.png").convert_alpha()
+exit_button = Button(100, 200, exit_button_img)  # Position your exit button
+
 # Main game loop
 while run and not in_game_over_screen:
-
     clock.tick(FPS)
 
     if in_game_over_screen:
@@ -37,18 +45,13 @@ while run and not in_game_over_screen:
 
     spawn_timer += 1
 
-    # Event handler
-    for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
     # Check for keys pressed
     keys_pressed = pygame.key.get_pressed()
 
     if keys_pressed[pygame.K_SPACE] and on_ground:
         jumping = True
         on_ground = False
-        velocity = jump_height 
+        velocity = jump_height
         print("SPACE")
 
     # Background scrolling
@@ -59,22 +62,16 @@ while run and not in_game_over_screen:
 
     # Obstacle spawning
     if spawn_timer >= 120:
-        from game_data import spawn_obstacle
         spawn_obstacle()
         spawn_timer = 0
-    from game_data import update_obstacles
+
+    # Update obstacles on screen
     update_obstacles(screen)
 
-    # Check for game over and display check for game over
-    from obstacles_spawning import check_for_game_over
-    if check_for_game_over():
-        game_over_screen(screen, font1)
-        run = False
-                
     # Draw the player
     pygame.draw.rect(screen, (255, 0, 0), player)
-    
-    # Jumping
+
+    # Jumping mechanics
     if jumping:
         velocity -= gravity
         player_y -= velocity
@@ -95,12 +92,29 @@ while run and not in_game_over_screen:
 
     player.y = player_y
 
-    # Background scrolling
+    # Background scrolling reset
     if abs(scroll) > background_width:
         scroll = 0
 
-    
+    # Check for collision and game over
+    def check_for_collision():
+        for obstacle in obstacles:
+            if player.colliderect(obstacle["rect"]):
+                return True
+        return False  # Ensure the function returns a boolean
 
+    if check_for_collision():
+        game_over = True
+
+    if game_over:
+        exit_button.draw()  # Draw the exit button when game is over
+
+    # Event handler
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    # Update display
     pygame.display.update()
 
 pygame.quit()
