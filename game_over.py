@@ -21,12 +21,7 @@ def game_over_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                in_game_over_screen = False  # Exit the game over screen loop
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Left mouse button
-                    pos = pygame.mouse.get_pos()
-                    retry_button.check_click(pos)
-                    exit_button.check_click(pos)
+                in_game_over_screen = False  
 
         screen.fill(white)
         exit_button.draw()

@@ -105,8 +105,6 @@ while run and not in_game_over_screen:
 
     if game_over:
         in_game_over_screen = True
-    
-    while in_game_over_screen:
         game_over_screen()
         
     # Event handler
