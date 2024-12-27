@@ -2,10 +2,9 @@ import pygame
 import math
 from screen import SCREEN_WIDTH, screen
 from player_settings import jumping, player_y, player
-from other import run, in_game_over_screen
 from buttons import Button
-from obstacles_spawning import obstacles
-from game_data import spawn_obstacle, update_obstacles
+from obstacles import obstacles, spawn_obstacle, update_obstacles
+from game_over import in_game_over_screen, game_over_screen
 
 pygame.init()
 
@@ -13,8 +12,9 @@ pygame.init()
 FPS = 60
 clock = pygame.time.Clock()
 
+run = True
 game_over = False
-on_ground = True  # Initialize on_ground flag to True
+on_ground = True  
 
 # Jumping parameters
 gravity = 1
@@ -25,19 +25,16 @@ velocity = jump_height
 spawn_timer = 0
 
 # Background display parameters
-background = pygame.image.load("background.png").convert()
+background = pygame.image.load("assets/background/background.png").convert()
 background_width = background.get_width()
 
 # Background scroll parameters
 scroll = 0
 tiles = math.ceil(SCREEN_WIDTH / background_width) + 1
 
-# Button setup
-exit_button_img = pygame.image.load("exit.png").convert_alpha()
-exit_button = Button(100, 200, exit_button_img)  # Position your exit button
-
 # Main game loop
 while run and not in_game_over_screen:
+
     clock.tick(FPS)
 
     if in_game_over_screen:
@@ -103,12 +100,15 @@ while run and not in_game_over_screen:
                 return True
         return False  # Ensure the function returns a boolean
 
-    if check_for_collision():
+    if check_for_collision():                        
         game_over = True
 
     if game_over:
-        exit_button.draw()  # Draw the exit button when game is over
-
+        in_game_over_screen = True
+    
+    while in_game_over_screen:
+        game_over_screen()
+        
     # Event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

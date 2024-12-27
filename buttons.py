@@ -3,6 +3,11 @@ from screen import screen
 
 pygame.init()
 
+# Button images
+exit_button_img = pygame.image.load("assets/buttons/exit.png").convert_alpha()
+retry_button_img = pygame.image.load("assets/buttons/retry.png").convert_alpha()
+
+# Buttons class
 class Button:
     def __init__(self, x, y, image):
         self.image = image
@@ -29,13 +34,11 @@ class Button:
         pos = pygame.mouse.get_pos()
         return self.rect.collidepoint(pos)
 
-exit_button_img = pygame.image.load("exit.png").convert_alpha()
-retry_button_img = pygame.image.load("retry.png").convert_alpha()
-
-
+# Set buttons so you can display them using variable names
 exit_button = Button(100, 200, exit_button_img)
 retry_button = Button(500, 200, retry_button_img)
 
+# Draw button function
 def draw_buttons(button):
     button.draw()
 
