@@ -86,6 +86,7 @@ while run and not in_game_over_screen:
             player_y = 400
             on_ground = True
             velocity = 0
+            jumping = False  # Reset jumping state when player hits the ground
 
     player.y = player_y
 
@@ -97,16 +98,9 @@ while run and not in_game_over_screen:
     def check_for_collision():
         for obstacle in obstacles:
             if player.colliderect(obstacle["rect"]):
-                return True
-        return False  # Ensure the function returns a boolean
+                game_over_screen()  # Call the game over screen
+                
 
-    if check_for_collision():                        
-        game_over = True
-
-    if game_over:
-        in_game_over_screen = True
-        game_over_screen()
-        
     # Event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
